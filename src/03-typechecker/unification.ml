@@ -294,7 +294,7 @@ and dirt_omega_step ~loc sub resolved unresolved w dcons =
       let d2' = Dirt.Param.refresh d2 in
       let w_ty' =
         ( (* In case d1 = d2, we need to substitute d1 as well *)
-          Substitution.apply_substitutions_to_dirt dirt_sub
+          Substitution.apply_substitutions_to_dirt sub
             { Dirt.effect_set = Effect.Set.empty; row = Dirt.Row.Param d1 },
           {
             Dirt.effect_set = Effect.Set.union ops1 ops2;
