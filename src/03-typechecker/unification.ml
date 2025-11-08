@@ -301,11 +301,15 @@ and dirt_omega_step ~loc sub resolved unresolved w dcons =
             row = Dirt.Row.Param d2';
           } )
       in
-      let sub' =
+      let sub'' =
         Substitution.add_dirt_substitution_e d2
           { effect_set = Effect.Set.diff ops1 ops2; row = Dirt.Row.Param d2' }
-        |> Substitution.add_dirt_var_coercion w
-             (Coercion.unionDirt (ops1, Coercion.dirtCoercionVar w' w_ty'))
+      in
+      let sub' =
+        Substitution.add_dirt_var_coercion w
+          (Substitution.apply_sub_dirtcoer sub''
+             (Coercion.unionDirt (ops1, Coercion.dirtCoercionVar w' w_ty')))
+          sub''
       in
       apply_substitution sub' sub resolved
         (Constraint.add_dirt_inequality (w', w_ty') unresolved)
