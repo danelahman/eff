@@ -292,6 +292,10 @@ and dirt_omega_step ~loc sub resolved unresolved w dcons =
       { effect_set = ops2; row = Dirt.Row.Param d2 } ) ->
       let w' = DirtCoercionParam.refresh w in
       let d2' = Dirt.Param.refresh d2 in
+      let dirt_sub =
+        Substitution.add_dirt_substitution_e d2
+          { effect_set = Effect.Set.diff ops1 ops2; row = Dirt.Row.Param d2' }
+      in
       let w_ty' =
         ( (* In case d1 = d2, we need to substitute d1 as well *)
           Substitution.apply_substitutions_to_dirt dirt_sub
@@ -302,8 +306,7 @@ and dirt_omega_step ~loc sub resolved unresolved w dcons =
           } )
       in
       let sub' =
-        Substitution.add_dirt_substitution_e d2
-          { effect_set = Effect.Set.diff ops1 ops2; row = Dirt.Row.Param d2' }
+        dirt_sub
         |> Substitution.add_dirt_var_coercion w
              (Coercion.unionDirt (ops1, Coercion.dirtCoercionVar w' w_ty'))
       in
